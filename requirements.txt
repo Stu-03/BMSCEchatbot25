@@ -1,0 +1,5 @@
+streamlit
+langchain-community 
+huggingface_hub
+requests
+tavily-python
