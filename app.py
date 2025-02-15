@@ -8,7 +8,7 @@ TAVILY_API_KEY = "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"
 HF_API_KEY = "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"
 
 # Initialize retriever and inference client
-retriever = TavilySearchAPIRetriever(api_key=TAVILY_API_KEY, k=15)
+retriever = TavilySearchAPIRetriever(api_key=TAVILY_API_KEY, k=5)
 client = InferenceClient(api_key=HF_API_KEY)
 
 # Streamlit UI
@@ -61,8 +61,9 @@ def main():
                 "role": "user",
                 "content": (
                     f"You are a smart chatbot who can answer questions keeping the following context in mind: {context}. "
-                    "Always add the line, 'for more information, visit https://www.bmsce.ac.in/', for additional reference."
-                    "If there is no context, then just say that you don't have enough information to answer the question"
+                    f"Summarize the retrieved context concisely while preserving all key details. Ensure the response is proportional in length to the original text, avoiding unnecessary elaboration. Maintain clarity and readability while covering essential aspects. Conclude with the provided link for more information."
+                    f"Always add the line, 'for more information, visit https://www.bmsce.ac.in/', for additional reference."
+                    f"If there is no context, then just say that you don't have enough information to answer the question"
                 )
             }
         ]
