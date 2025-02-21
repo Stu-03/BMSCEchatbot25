@@ -31,7 +31,7 @@ def main():
 
         # Retrieve documents and filter context
         with st.spinner("Retrieving and processing context..."):
-            client = TavilyClient(api_key="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")
+            client = TavilyClient(api_key=TAVILY_KEY)
             x = ""
             response = client.search(
                 query=prompt,
