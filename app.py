@@ -4,6 +4,8 @@ import time
 from tavily import TavilyClient
 import re
 
+TAVILY_KEY = "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"
+
 def main():
     st.set_page_config(
         page_title="BMSCE Chatbot",
