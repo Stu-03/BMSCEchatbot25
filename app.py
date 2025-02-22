@@ -35,7 +35,7 @@ def main():
 
         # Retrieve documents and filter context
         with st.spinner("Retrieving and processing context..."):
-            if prompt.lower() in ['hi', 'hello', 'hey']:
+            if prompt.strip().lower() in ['hi', 'hello', 'hey']:
                 client = InferenceClient(
                     api_key=HF_API_KEY
                 )
