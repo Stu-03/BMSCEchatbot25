@@ -3,9 +3,11 @@ from langchain_community.retrievers import TavilySearchAPIRetriever
 from huggingface_hub import InferenceClient
 import time 
 from tavily import TavilyClient
-import re
+import re, random
 
-TAVILY_KEY = st.secrets["TAVILY_KEY"]
+T1 = st.secrets["TKEY1"]
+T2 = st.secrets["TKEY2"]
+tavkey = [T1, T2]
 HF_API_KEY = st.secrets["HF_API_KEY"]
 
 def main():
@@ -55,6 +57,7 @@ def main():
 
                 x = completion.choices[0].message.content
             else:
+                TAVILY_KEY = random.choice(tavkey)
                 client = TavilyClient(api_key=TAVILY_KEY)
                 x = ""
                 response = client.search(
