@@ -1,5 +1,9 @@
 streamlit
-langchain-community 
+langchain-community
 huggingface_hub
+tavily
 requests
-tavily-python
+beautifulsoup4
+spacy
+rapidfuzz
+
