@@ -1,2 +1,2 @@
 # BMSCE Chatbot 2025
-with ❤️ from CSE-DS(2022)
+from CSE-DS(2022)
