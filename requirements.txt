@@ -1,7 +1,7 @@
 streamlit
 langchain-community
 huggingface_hub
-tavily
+tavily-python
 requests
 beautifulsoup4
 spacy
