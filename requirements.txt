@@ -1,4 +1,4 @@
-numpy==1.23.5
+numpy>=1.26.0
 cython
 spacy==3.7.2
 thinc==8.2.1
@@ -8,7 +8,6 @@ rapidfuzz
 huggingface_hub
 tavily-python
 streamlit
-
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1.tar.gz
 
 
