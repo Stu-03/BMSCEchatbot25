@@ -1,14 +1,14 @@
-streamlit
-langchain-community
-huggingface_hub
-tavily-python
-requests
-beautifulsoup4
-rapidfuzz
 numpy==1.23.5
 cython
 spacy==3.7.2
 thinc==8.2.1
+bs4
+requests
+rapidfuzz
+huggingface_hub
+tavily-python
+streamlit
+
 https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1.tar.gz
 
 
