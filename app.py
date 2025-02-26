@@ -15,8 +15,11 @@ T1 = st.secrets["TKEY1"]
 T2 = st.secrets["TKEY2"]
 tavkey = [T1, T2]
 HF_API_KEY = st.secrets["HF_API_KEY"]
-os.system("python -m spacy download en_core_web_sm")
-nlp = spacy.load("en_core_web_sm")
+try:
+    nlp = spacy.load("en_core_web_sm")
+except OSError:
+    os.system("python -m spacy download en_core_web_sm")
+    nlp = spacy.load("en_core_web_sm")
 DEPARTMENT_ALIASES = {
     "Computer Science and Engineering": ["CSE", "CS", "Comp Sci", "Computer Science"],
     "Information Science and Engineering": ["ISE", "IS", "IT"],
