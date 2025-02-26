@@ -15,11 +15,23 @@ T1 = st.secrets["TKEY1"]
 T2 = st.secrets["TKEY2"]
 tavkey = [T1, T2]
 HF_API_KEY = st.secrets["HF_API_KEY"]
-try:
-    nlp = spacy.load("en_core_web_sm")
-except OSError:
-    os.system("python -m spacy download en_core_web_sm")
-    nlp = spacy.load("en_core_web_sm")
+
+import subprocess
+
+# Function to ensure the model is installed
+def ensure_spacy_model():
+    try:
+        nlp = spacy.load("en_core_web_sm")
+        return nlp
+    except OSError:
+        print("Downloading spaCy model...")
+        subprocess.run(["python", "-m", "spacy", "download", "en_core_web_sm"], check=True)
+        nlp = spacy.load("en_core_web_sm")  # Try loading again after installation
+        return nlp
+
+
+nlp = ensure_spacy_model()
+
 DEPARTMENT_ALIASES = {
     "Computer Science and Engineering": ["CSE", "CS", "Comp Sci", "Computer Science"],
     "Information Science and Engineering": ["ISE", "IS", "IT"],
