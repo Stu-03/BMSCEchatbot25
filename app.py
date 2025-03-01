@@ -218,8 +218,18 @@ def main():
         </style>
     """, unsafe_allow_html=True)
 
-    st.title("🎓 BMSCE Chatbot")
-    st.write("Your go-to assistant for all things BMSCE — ask, explore, and discover!")
+    logo_path = "C:/Users/viole/Downloads/BMSCE/logo.png"  # Replace with your logo path
+
+# Create a two-column layout
+    col1, col2 = st.columns([0.1, 0.9])  # Adjust column width as needed
+
+    with col1:
+        st.image(logo_path, width=70)  # Adjust width to match title size
+
+    with col2:
+        st.title("BMSCE Chatbot")
+
+    st.write("Your go-to assistant for your queries - admissions, courses, activities and more!")
 
     if "disclaimer_visible" not in st.session_state:
         st.session_state.disclaimer_visible = True
@@ -227,10 +237,29 @@ def main():
     if st.session_state.disclaimer_visible:
         with st.expander("**Disclaimer**"):
             st.write("""
-            This chatbot provides information related to BMS College of Engineering.  
-            Replies are sourced from the official website [bmsce.ac.in](https://bmsce.ac.in/) and verified sources.  
-            The chatbot does not store any personal information and is currently in testing phase, get back to us if any errors.
+            This chatbot provides information related to **BMS College of Engineering**.  
+            Replies are sourced from the official website: [bmsce.ac.in](https://bmsce.ac.in/).  
+
+            The chatbot **does not store any personal information** and is currently in the **testing phase**.  
+
+            For any queries, contact [here](mailto:stuthi.cd22@bmsce.ac.in).
             """)
+
+    options = ["Admissions", "Departments", "News and Events", "Activites"]
+    selection = st.pills("", options, selection_mode="single")
+    if selection:
+        TAVILY_KEY = random.choice(tavkey)
+        client = TavilyClient(api_key=TAVILY_KEY)
+        x = ""
+        response = client.search(
+            query=selection,
+            include_answer="basic",
+            include_domains=["bmsce.ac.in"]
+            )
+        x = response['answer']
+        st.write(x)
+
+                
 
     # Initialize session state for chat and feedback buttons
     if "messages" not in st.session_state:
@@ -239,6 +268,10 @@ def main():
         st.session_state.thumbs_up = 0
     if "thumbs_down" not in st.session_state:
         st.session_state.thumbs_down = 0
+    if "user_input" not in st.session_state:
+        st.session_state.user_input = ""
+    if "show_keyboard" not in st.session_state:
+        st.session_state.show_keyboard = False
 
     # Display chat history
     for message in st.session_state.messages:
@@ -325,8 +358,10 @@ def main():
             st.write(f"👍: {st.session_state.thumbs_up}")
         if flag == 2:
             st.write(f"👎: {st.session_state.thumbs_down}")
+        print(st.session_state.thumbs_up, st.session_state.thumbs_down)
 
 
 if __name__ == "__main__":
     main()
+
 
