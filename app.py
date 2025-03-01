@@ -9,6 +9,7 @@ from urllib.parse import urljoin, unquote
 import spacy
 from rapidfuzz import process, fuzz
 import os
+from googleapiclient import discovery
 
 T1 = st.secrets["TKEY1"]
 T2 = st.secrets["TKEY2"]
@@ -16,6 +17,7 @@ T3 = st.secrets["TKEY3"]
 T4 = st.secrets["TKEY4"]
 tavkey = [T1, T2, T3, T4]
 HF_API_KEY = st.secrets["HF_API_KEY"]
+PERSPECTIVE_API_KEY=st.secrets["PERSPECTIVE_API_KEY"]
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -148,6 +150,26 @@ def get_syllabus_links(url):
 
     return final_links if final_links else None
 page_url = "https://bmsce.ac.in/home/All-Department-Syllabus"
+def check_toxicity(text):
+    perspective_client = discovery.build(
+        "commentanalyzer",
+        "v1alpha1",
+        developerKey=PERSPECTIVE_API_KEY,
+        discoveryServiceUrl="https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1",
+        static_discovery=False,
+    )
+
+    analyze_request = {
+        'comment': {'text': text},
+        'requestedAttributes': {'TOXICITY': {}}
+    }
+
+    try:
+        response = perspective_client.comments().analyze(body=analyze_request).execute()
+        toxicity_score = response["attributeScores"]["TOXICITY"]["summaryScore"]["value"]
+        return toxicity_score
+    except Exception as e:
+        return 0  # Assume non-toxic in case of failure
 
 def main():
     st.set_page_config(
@@ -286,56 +308,61 @@ def main():
         with st.chat_message("user"):
             st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
+        # Check toxicity
+        toxicity_score = check_toxicity(prompt)
+        
+        if toxicity_score > 0.5:
+            st.warning("⚠️ Hey there! Please be respectful. Your message contains potentially inappropriate language.")
+        else:
+            # Retrieve documents and filter context
+            with st.spinner("Retrieving and processing context..."):
+                if prompt.strip().lower() in ['hi', 'hello', 'hey']:
+                    client = InferenceClient(api_key=HF_API_KEY)
 
-        # Retrieve documents and filter context
-        with st.spinner("Retrieving and processing context..."):
-            if prompt.strip().lower() in ['hi', 'hello', 'hey']:
-                client = InferenceClient(api_key=HF_API_KEY)
+                    messages = [
+                        {
+                            "role": "user",
+                            "content": "You are a chatbot designed to talk about BMS College of Engineering, so introduce yourself that way. You can also suggest the user to ask queries regarding the departments, clubs, or anything about the college in general. Subtly mention that your replies are verified and sourced from the official website 'https://bmsce.ac.in/'"
+                        }
+                    ]
 
-                messages = [
-                    {
-                        "role": "user",
-                        "content": "You are a chatbot designed to talk about BMS College of Engineering, so introduce yourself that way. You can also suggest the user to ask queries regarding the departments, clubs, or anything about the college in general. Subtly mention that your replies are verified and sourced from the official website 'https://bmsce.ac.in/'"
-                    }
-                ]
+                    completion = client.chat.completions.create(
+                        model="HuggingFaceH4/zephyr-7b-beta", 
+                        messages=messages, 
+                        max_tokens=500,
+                    )
 
-                completion = client.chat.completions.create(
-                    model="HuggingFaceH4/zephyr-7b-beta", 
-                    messages=messages, 
-                    max_tokens=500,
-                )
+                    x = completion.choices[0].message.content
+                elif "syllabus" in prompt.strip().lower():
+                    x = "Syllabus:\n"
+                    user_query = prompt.strip()
+                    syllabus_link = get_syllabus_by_query(page_url, user_query)
+                    ll = get_syllabus_links(syllabus_link)
+                    x += "\n"
+                    x += "\n".join(ll)
 
-                x = completion.choices[0].message.content
-            elif "syllabus" in prompt.strip().lower():
-                x = "Syllabus:\n"
-                user_query = prompt.strip()
-                syllabus_link = get_syllabus_by_query(page_url, user_query)
-                ll = get_syllabus_links(syllabus_link)
-                x += "\n"
-                x += "\n".join(ll)
+                else:
+                    TAVILY_KEY = random.choice(tavkey)
+                    client = TavilyClient(api_key=TAVILY_KEY)
+                    x = ""
+                    response = client.search(
+                        query=prompt,
+                        include_answer="basic",
+                        include_domains=["bmsce.ac.in"]
+                    )
+                    x = response['answer']
+                    i = 1
+                    for result in response['results']:
+                        r = result['url']
+                        r = re.sub(r'\+', '%20', r)
+                        x += "\n"+ str(i) + ". " + r
+                        i += 1
 
-            else:
-                TAVILY_KEY = random.choice(tavkey)
-                client = TavilyClient(api_key=TAVILY_KEY)
-                x = ""
-                response = client.search(
-                    query=prompt,
-                    include_answer="basic",
-                    include_domains=["bmsce.ac.in"]
-                )
-                x = response['answer']
-                i = 1
-                for result in response['results']:
-                    r = result['url']
-                    r = re.sub(r'\+', '%20', r)
-                    x += "\n"+ str(i) + ". " + r
-                    i += 1
+            with st.chat_message("assistant"):
+                with st.spinner("Thinking..."):
+                    st.markdown(x)
 
-        with st.chat_message("assistant"):
-            with st.spinner("Thinking..."):
-                st.markdown(x)
-
-        st.session_state.messages.append({"role": "assistant", "content": x})
+            st.session_state.messages.append({"role": "assistant", "content": x})
 
     st.markdown(f"""
         <div class="thumbs-buttons">
