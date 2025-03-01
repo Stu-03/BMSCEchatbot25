@@ -12,7 +12,9 @@ import os
 
 T1 = st.secrets["TKEY1"]
 T2 = st.secrets["TKEY2"]
-tavkey = [T1, T2]
+T3 = st.secrets["TKEY3"]
+T4 = st.secrets["TKEY4"]
+tavkey = [T1, T2, T3, T4]
 HF_API_KEY = st.secrets["HF_API_KEY"]
 
 nlp = spacy.load("en_core_web_sm")
