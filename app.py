@@ -311,7 +311,7 @@ def main():
         # Check toxicity
         toxicity_score = check_toxicity(prompt)
         
-        if toxicity_score > 0.5:
+        if toxicity_score > 0.35:
             st.warning("⚠️ Hey there! Please be respectful. Your message contains potentially inappropriate language.")
         else:
             # Retrieve documents and filter context
