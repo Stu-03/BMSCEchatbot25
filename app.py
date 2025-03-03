@@ -322,7 +322,7 @@ def main():
                     messages = [
                         {
                             "role": "user",
-                            "content": "You are a chatbot designed to talk about BMS College of Engineering, so introduce yourself that way. You can also suggest the user to ask queries regarding the departments, clubs, or anything about the college in general. Subtly mention that your replies are verified and sourced from the official website 'https://bmsce.ac.in/'"
+                            "content": "You are a chatbot designed to talk about BMS College of Engineering, so introduce yourself that way. You need to only greet the user politely. You can also suggest the user to ask queries regarding the departments, clubs, or anything about the college in general. Subtly mention that your replies are verified and sourced from the official website 'https://bmsce.ac.in/'"
                         }
                     ]
 
