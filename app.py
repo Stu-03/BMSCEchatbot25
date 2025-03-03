@@ -10,6 +10,7 @@ import spacy
 from rapidfuzz import process, fuzz
 import os
 from googleapiclient import discovery
+import webbrowser
 
 T1 = st.secrets["TKEY1"]
 T2 = st.secrets["TKEY2"]
