@@ -20,9 +20,7 @@ T6 = st.secrets["TKEY6"]
 tavkey = [T1, T2, T3, T4, T5, T6]
 HF_API_KEY = st.secrets["HF_API_KEY"]
 PERSPECTIVE_API_KEY=st.secrets["PERSPECTIVE_API_KEY"]
-
 nlp = spacy.load("en_core_web_sm")
-
 DEPARTMENT_ALIASES = {
     "Computer Science and Engineering": ["CSE", "CS", "Comp Sci", "Computer Science"],
     "Information Science and Engineering": ["ISE", "IS", "IT"],
@@ -210,26 +208,6 @@ def main():
             background-color: #0088cc !important;
             
             }
-
-            /* Thumbs-up & Thumbs-down button container */
-            .thumbs-buttons {
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                background-color: white;
-                padding: 10px;
-                border-radius: 10px;
-                box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-                display: flex;
-                gap: 10px;
-                align-items: center;
-            }
-            .thumbs-buttons button {
-                border: none;
-                background: none;
-                font-size: 20px;
-                cursor: pointer;
-            }
             .counter-display {
                 font-size: 18px;
                 font-weight: bold;
@@ -244,11 +222,10 @@ def main():
         </style>
     """, unsafe_allow_html=True)
 
-    logo_path = "logo.png"  # Replace with your logo path
+    logo_path = "C:/Users/viole/Downloads/BMSCE/logo.png"  # Replace with your logo path
 
 # Create a two-column layout
     col1, col2 = st.columns([0.1, 0.9])  # Adjust column width as needed
-
     with col1:
         st.image(logo_path, width=70)  # Adjust width to match title size
 
@@ -256,24 +233,10 @@ def main():
         st.title("BMSCE Chatbot")
 
     st.write("Your go-to assistant for your queries - admissions, courses, activities and more!")
-
-    if "disclaimer_visible" not in st.session_state:
-        st.session_state.disclaimer_visible = True
-
-    if st.session_state.disclaimer_visible:
-        with st.expander("**Disclaimer**"):
-            st.write("""
-            This chatbot provides information related to **BMS College of Engineering**.  
-            Replies are sourced from the official website: [bmsce.ac.in](https://bmsce.ac.in/).  
-
-            The chatbot **does not store any personal information** and is currently in the **testing phase**.  
-
-            For any queries, contact [here](mailto:stuthi.cd22@bmsce.ac.in).
-            """)
-
-    options = ["Admissions", "Departments", "News and Events", "Activites"]
+    
+    options = ["Admissions", "Departments", "News and Events", "Hostels"]
     selection = st.pills("", options, selection_mode="single")
-    if selection:
+    if selection=="Admissions" or selection=="Departments":
         TAVILY_KEY = random.choice(tavkey)
         client = TavilyClient(api_key=TAVILY_KEY)
         x = ""
@@ -284,6 +247,10 @@ def main():
             )
         x = response['answer']
         st.write(x)
+    elif selection == "News and Events":
+        webbrowser.open("https://bmsce.ac.in/home#CollegeNotifications")
+    elif selection == "Hostels":
+        webbrowser.open("https://bmsce.ac.in/home/About-BMSET-Hostels")
 
                 
 
@@ -304,8 +271,24 @@ def main():
         with st.chat_message(message["role"]):
             st.markdown(message["content"])
 
+
+
+    # Button functionality
+    col1, col2, col3= st.columns([0.75, 0.1, 0.1])
+    with col1:
+        prompt = st.chat_input("Enter your query")
+    with col2:
+        if st.button("👍", key="up"):
+            st.session_state.thumbs_up += 1
+            print(st.session_state.thumbs_up)
+            
+    with col3:
+        if st.button("👎", key="down"):
+            st.session_state.thumbs_down += 1
+            print(st.session_state.thumbs_up)
+
     # Chat input
-    if prompt := st.chat_input("Enter your query"):
+    if prompt:
         # Display user message
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -366,33 +349,43 @@ def main():
 
             st.session_state.messages.append({"role": "assistant", "content": x})
 
-    st.markdown(f"""
-        <div class="thumbs-buttons">
-            <button onclick="document.getElementById('thumbs-up-count').innerText++">👍 {st.session_state.thumbs_up}</button>
-            <button onclick="document.getElementById('thumbs-down-count').innerText++">👎 {st.session_state.thumbs_down}</button>
-        </div>
-    """, unsafe_allow_html=True)
+    if "disclaimer_visible" not in st.session_state:
+        st.session_state.disclaimer_visible = True
 
-    # Button functionality
-    col1, col2, col3 = st.columns([0.25, 1, 0.5])
-    flag = 0
-    with col1:
-        if st.button("👍", key="up"):
-            st.session_state.thumbs_up += 1
-            flag = 1
-    with col2:
-        if st.button("👎", key="down"):
-            st.session_state.thumbs_down += 1
-            flag = 2
-    with col3:
-        if flag == 1:
-            st.write(f"👍: {st.session_state.thumbs_up}")
-        if flag == 2:
-            st.write(f"👎: {st.session_state.thumbs_down}")
-        print(st.session_state.thumbs_up, st.session_state.thumbs_down)
+    if st.session_state.disclaimer_visible:
+        with st.container():
+            with st.expander("**Disclaimer**"):
+                st.write("""
+                This chatbot provides information related to **BMS College of Engineering**.  
+                Replies are sourced from the official website: [bmsce.ac.in](https://bmsce.ac.in/).  
+
+                The chatbot **does not store any personal information** and is currently in the **testing phase**.  
+
+                For any queries, contact [here](mailto:stuthi.cd22@bmsce.ac.in).
+                """)
+
+    # Custom CSS to make it stick to the bottom
+    st.markdown(
+        """
+        <style>
+            div[data-testid="stExpander"] {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                background-color: #f8f9fa;
+                padding: 10px;
+                border-top: 1px solid #ddd;
+                z-index: 1000;
+                text-align:center;
+            }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
 
 
 if __name__ == "__main__":
     main()
-
 
