@@ -222,7 +222,7 @@ def main():
         </style>
     """, unsafe_allow_html=True)
 
-    logo_path = "C:/Users/viole/Downloads/BMSCE/logo.png"  # Replace with your logo path
+    logo_path = "logo.png"  # Replace with your logo path
 
 # Create a two-column layout
     col1, col2 = st.columns([0.1, 0.9])  # Adjust column width as needed
