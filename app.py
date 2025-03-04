@@ -235,23 +235,23 @@ def main():
 
     st.write("Your go-to assistant for your queries - admissions, courses, activities and more!")
     
-    """options = ["Admissions", "Departments", "News and Events", "Hostels"]
-    selection = st.pills("", options, selection_mode="single")
-    if selection=="Admissions" or selection=="Departments":
-        TAVILY_KEY = random.choice(tavkey)
-        client = TavilyClient(api_key=TAVILY_KEY)
-        x = ""
-        response = client.search(
-            query=selection,
-            include_answer="basic",
-            include_domains=["bmsce.ac.in"]
-            )
-        x = response['answer']
-        st.write(x)
-    elif selection == "News and Events":
-        webbrowser.open("https://bmsce.ac.in/home#CollegeNotifications")
-    elif selection == "Hostels":
-        webbrowser.open("https://bmsce.ac.in/home/About-BMSET-Hostels")"""
+    #options = ["Admissions", "Departments", "News and Events", "Hostels"]
+    #selection = st.pills("", options, selection_mode="single")
+    #if selection=="Admissions" or selection=="Departments":
+     #   TAVILY_KEY = random.choice(tavkey)
+   #   client = TavilyClient(api_key=TAVILY_KEY)
+    #    x = ""
+     #   response = client.search(
+      #      query=selection,
+       #     include_answer="basic",
+        #    include_domains=["bmsce.ac.in"]
+         #   )
+  #      x = response['answer']
+#    st.write(x)
+ #    elif selection == "News and Events":
+  #      webbrowser.open("https://bmsce.ac.in/home#CollegeNotifications")
+   # elif selection == "Hostels":
+    #    webbrowser.open("https://bmsce.ac.in/home/About-BMSET-Hostels")"""
 
                 
 
