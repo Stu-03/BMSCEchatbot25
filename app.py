@@ -319,8 +319,8 @@ def main():
                     )
 
                     x = completion.choices[0].message.content
-                elif "syllabus" in prompt.strip().lower():
-                    x = "Syllabus:\n"
+                elif "syllabus" in prompt.strip().lower() or "sylabus" in prompt.strip().lower():
+                    x = "This is the link to the most recent syllabus.\n"
                     user_query = prompt.strip()
                     syllabus_link = get_syllabus_by_query(page_url, user_query)
                     ll = get_syllabus_links(syllabus_link)
