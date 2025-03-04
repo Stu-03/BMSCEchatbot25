@@ -235,7 +235,7 @@ def main():
 
     st.write("Your go-to assistant for your queries - admissions, courses, activities and more!")
     
-    options = ["Admissions", "Departments", "News and Events", "Hostels"]
+    """options = ["Admissions", "Departments", "News and Events", "Hostels"]
     selection = st.pills("", options, selection_mode="single")
     if selection=="Admissions" or selection=="Departments":
         TAVILY_KEY = random.choice(tavkey)
@@ -251,7 +251,7 @@ def main():
     elif selection == "News and Events":
         webbrowser.open("https://bmsce.ac.in/home#CollegeNotifications")
     elif selection == "Hostels":
-        webbrowser.open("https://bmsce.ac.in/home/About-BMSET-Hostels")
+        webbrowser.open("https://bmsce.ac.in/home/About-BMSET-Hostels")"""
 
                 
 
